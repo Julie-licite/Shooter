@@ -25,6 +25,14 @@ public class @Controls_Character : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""0b4c38ce-a88d-4d3c-884c-ca15e7bab7e9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -82,6 +90,17 @@ public class @Controls_Character : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""134635d2-baee-4e17-9b60-6ce5270669af"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -91,6 +110,7 @@ public class @Controls_Character : IInputActionCollection, IDisposable
         // Main
         m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
         m_Main_Move = m_Main.FindAction("Move", throwIfNotFound: true);
+        m_Main_Shoot = m_Main.FindAction("Shoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,11 +161,13 @@ public class @Controls_Character : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Main;
     private IMainActions m_MainActionsCallbackInterface;
     private readonly InputAction m_Main_Move;
+    private readonly InputAction m_Main_Shoot;
     public struct MainActions
     {
         private @Controls_Character m_Wrapper;
         public MainActions(@Controls_Character wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Main_Move;
+        public InputAction @Shoot => m_Wrapper.m_Main_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -158,6 +180,9 @@ public class @Controls_Character : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_MainActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_MainActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_MainActionsCallbackInterface.OnMove;
+                @Shoot.started -= m_Wrapper.m_MainActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_MainActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_MainActionsCallbackInterface.OnShoot;
             }
             m_Wrapper.m_MainActionsCallbackInterface = instance;
             if (instance != null)
@@ -165,6 +190,9 @@ public class @Controls_Character : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
             }
         }
     }
@@ -172,5 +200,6 @@ public class @Controls_Character : IInputActionCollection, IDisposable
     public interface IMainActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
     }
 }
