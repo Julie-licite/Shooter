@@ -14,12 +14,7 @@ public class Controller_Behavior : MonoBehaviour
     [SerializeField] private GameObject gameOverCanvas;
 
 
-    //mouse trick
-    float x = Input.GetAxis("R_analog_horz");
-    float y = Input.GetAxis("R_analog_vert");
-    float aim_angle = 0.0f;
-    bool aiming_right = false;
-    bool aiming_up = false;
+    
 
     private Vector2 direction;
     private Rigidbody myRigidbody;
@@ -29,12 +24,7 @@ public class Controller_Behavior : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        //Mouse trick
-        float R_analog_threshold = 0.20f;
-
-        if (Mathf.Abs(x) < R_analog_threshold) { x = 0.0f; }
-
-        if (Mathf.Abs(y) < R_analog_threshold) { y = 0.0f; }
+       
 
         inputs = new Controls_Character();
         inputs.Enable();
@@ -62,6 +52,29 @@ public class Controller_Behavior : MonoBehaviour
     {
         myRigidbody.velocity = direction * (speed * Time.fixedDeltaTime);
         ClampPosition();
+
+        //recuperer coordoné souris
+        Vector3 MousePostion = Camera.main.WorldToScreenPoint(transform.position);
+        float x = Input.mousePosition.x; 
+        float y = Input.mousePosition.y;
+        float aim_angle = 0.0f;
+        /*bool aiming_right = false;
+        bool aiming_up = false;*/
+        //print(Input.mousePosition.x);
+        float R_analog_threshold = 0.20f;
+
+        if (Mathf.Abs(x) < R_analog_threshold) { x = 0.0f; }
+
+        if (Mathf.Abs(y) < R_analog_threshold) { y = 0.0f; }
+        
+        if (x != 0.0f || y != 0.0f)
+        {
+
+            aim_angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+
+            // ANGLE GUN
+           transform.rotation = Quaternion.AngleAxis(aim_angle, Vector3.forward);
+        }
     }
 
         
